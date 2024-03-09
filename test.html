@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+</head>
+<body>
+    <h1>Todo List</h1>
+
+    <form id="todo-form">
+        <input type="text" id="todo-input" placeholder="Digite uma nova tarefa">
+        <button type="submit">Adicionar</button>
+    </form>
+
+    <ul id="todo-list">
+        <!-- Aqui serão listadas as tarefas -->
+    </ul>
+    <p id="error"></p>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('todo-form');
+            const input = document.getElementById('todo-input');
+            const todoList = document.getElementById('todo-list');
+            const errorMsg = document.querySelector('#error')
+
+            // Carrega as tarefas ao carregar a página
+            loadTodoList();
+
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                const todoTitle = input.value.trim();
+                await addTodoItem(todoTitle);
+                input.value = '';
+            });
+
+            async function loadTodoList() {
+                try {
+                    const { data } = await axios('/api/tasks')
+
+                    data.data.forEach(task => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `Task: ${task.title} - Status: ${task.status}` ;
+                        todoList.appendChild(listItem);
+                    })
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+
+            async function addTodoItem(title) {
+                try {
+                    const { data } = await axios.post('/api/tasks', {title: title})
+                    const task = data.data[0]
+
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `Task: ${task.title} - Status: ${task.status}` ;
+                    todoList.appendChild(listItem);
+                    errorMsg.textContent = ''
+
+                } catch (error) {
+                    errorMsg.style.color = "red"
+                    errorMsg.textContent = error.response.data.message
+                }
+            }
+
+            // Aqui você pode adicionar lógica para interagir com sua API
+            // Por exemplo, enviar dados para adicionar, atualizar ou excluir tarefas.
+        });
+    </script>
+</body>
+</html>
