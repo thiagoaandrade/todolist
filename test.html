@@ -14,7 +14,7 @@
     </form>
 
     <ul id="todo-list">
-        <!-- Aqui serão listadas as tarefas -->
+
     </ul>
     <p id="error"></p>
 
@@ -26,7 +26,6 @@
             const todoList = document.getElementById('todo-list');
             const errorMsg = document.querySelector('#error')
 
-            // Carrega as tarefas ao carregar a página
             loadTodoList();
 
             form.addEventListener('submit', async function(event) {
@@ -66,8 +65,6 @@
                 }
             }
 
-            // Aqui você pode adicionar lógica para interagir com sua API
-            // Por exemplo, enviar dados para adicionar, atualizar ou excluir tarefas.
         });
     </script>
 </body>
